@@ -20,7 +20,6 @@ make install DESTDIR=AppDir
 rm -vf AppDir/usr/bin/yuzu-cmd AppDir/usr/bin/yuzu-tester
 
 # Download tools needed to build an AppImage
-wget -nc https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
 wget -nc https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
 wget -nc https://github.com/darealshinji/AppImageKit-checkrt/releases/download/continuous/AppRun-patched-x86_64
 wget -nc https://github.com/darealshinji/AppImageKit-checkrt/releases/download/continuous/exec-x86_64.so
@@ -28,7 +27,6 @@ wget -nc https://github.com/darealshinji/AppImageKit-checkrt/releases/download/c
 chmod 755 \
     AppRun-patched-x86_64 \
     exec-x86_64.so \
-    linuxdeploy-x86_64.AppImage \
     linuxdeploy-plugin-qt-x86_64.AppImage
 
 # Workaround for https://github.com/AppImage/AppImageKit/issues/828
@@ -39,7 +37,8 @@ mkdir -p AppDir/usr/optional/libstdc++
 mkdir -p AppDir/usr/optional/libgcc_s
 
 # Deploy yuzu's needed dependencies
-./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt
+bash /yuzu/.ci/scripts/linux/deploy.sh usr/bin/yuzu AppDir
+./linuxdeploy-plugin-qt-x86_64.AppImage --appdir AppDir
 
 # Workaround for building yuzu with GCC 10 but also trying to distribute it to Ubuntu 18.04 et al.
 # See https://github.com/darealshinji/AppImageKit-checkrt
